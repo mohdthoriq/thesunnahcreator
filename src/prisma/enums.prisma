@@ -1,3 +1,10 @@
+enum AuthProviderTypes {
+  manual
+  google
+
+  @@map("auth_provider_types")
+}
+
 enum UserRole {
   user
   admin
