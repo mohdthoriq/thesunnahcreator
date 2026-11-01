@@ -1,0 +1,30 @@
+model Video {
+  id               String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String      @map("user_id") @db.Uuid
+  templateId       String      @map("template_id") @db.Uuid
+  templateVersion  Int         @map("template_version")
+  variantId        String      @map("variant_id") @db.Uuid
+  paletteId        String      @map("palette_id") @db.Uuid
+  inputs           Json        @default("{}") @db.JsonB
+  status           VideoStatus @default(draft)
+  resolution       String?     @db.VarChar(10)
+  hasWatermark     Boolean     @default(true) @map("has_watermark")
+  outputKey        String?     @map("output_key") @db.Text
+  lastRenderJobId  String?     @unique @map("last_render_job_id") @db.Uuid
+  renderedAt       DateTime?   @map("rendered_at") @db.Timestamptz(6)
+  deletedAt        DateTime?   @map("deleted_at") @db.Timestamptz(6)
+  createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user           User            @relation(fields: [userId], references: [id])
+  template       Template        @relation(fields: [templateId], references: [id])
+  variant        TemplateVariant @relation(fields: [variantId], references: [id])
+  palette        Palette         @relation(fields: [paletteId], references: [id])
+  lastRenderJob  RenderJob?      @relation("VideoLastRenderJob", fields: [lastRenderJobId], references: [id])
+  renderJobs     RenderJob[]     @relation("VideoRenderJobs")
+  contentReports ContentReport[]
+
+  @@index([userId, createdAt], map: "idx_videos_history")
+  @@map("videos")
+}
+

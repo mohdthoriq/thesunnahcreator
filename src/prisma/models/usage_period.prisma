@@ -1,0 +1,16 @@
+model UsagePeriod {
+  userId      String   @map("user_id") @db.Uuid
+  periodStart DateTime @map("period_start") @db.Date
+  planId      String   @map("plan_id") @db.Uuid
+  rendersUsed Int      @default(0) @map("renders_used")
+  renderQuota Int?     @map("render_quota")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [planId], references: [id])
+
+  @@id([userId, periodStart])
+  @@map("usage_periods")
+}
+

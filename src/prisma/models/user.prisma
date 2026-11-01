@@ -1,0 +1,25 @@
+model User {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String    @unique @db.VarChar(255)
+  emailVerifiedAt  DateTime? @map("email_verified_at") @db.Timestamptz(6)
+  passwordHash     String?   @map("password_hash") @db.Text
+  role             UserRole  @default(user)
+  planId           String    @map("plan_id") @db.Uuid
+  ecourseMemberId  String?   @unique @map("ecourse_member_id") @db.VarChar(100)
+  lastLoginAt      DateTime? @map("last_login_at") @db.Timestamptz(6)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  plan               Plan                @relation(fields: [planId], references: [id])
+  profile            UserProfile?
+  userAuthProviders  UserAuthProvider[]
+  verificationTokens VerificationToken[]
+  createdTemplates   Template[]          @relation("TemplateCreator")
+  videos             Video[]
+  usagePeriods       UsagePeriod[]
+  reportedReports    ContentReport[]     @relation("ReportedByUser")
+  reviewedReports    ContentReport[]     @relation("ReviewedByUser")
+
+  @@map("users")
+}
+

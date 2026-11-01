@@ -1,0 +1,24 @@
+model ContentReport {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId     String       @map("template_id") @db.Uuid
+  videoId        String?      @map("video_id") @db.Uuid
+  reporterId     String?      @map("reporter_id") @db.Uuid
+  reasonId       Int          @map("reason_id") @db.SmallInt
+  note           String?      @db.VarChar(500)
+  status         ReportStatus @default(open)
+  reviewedBy     String?      @map("reviewed_by") @db.Uuid
+  reviewedAt     DateTime?    @map("reviewed_at") @db.Timestamptz(6)
+  resolutionNote String?      @map("resolution_note") @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  template Template     @relation(fields: [templateId], references: [id])
+  video    Video?       @relation(fields: [videoId], references: [id])
+  reporter User?        @relation("ReportedByUser", fields: [reporterId], references: [id])
+  reason   ReportReason @relation(fields: [reasonId], references: [id])
+  reviewer User?        @relation("ReviewedByUser", fields: [reviewedBy], references: [id])
+
+  @@index([status, createdAt], map: "idx_reports_open")
+  @@map("content_reports")
+}
+

@@ -1,0 +1,14 @@
+model ReportReason {
+  id        Int      @id @default(autoincrement()) @db.SmallInt
+  code      String   @unique @db.VarChar(30)
+  label     String   @db.VarChar(100)
+  isActive  Boolean  @default(true) @map("is_active")
+  sortOrder Int      @default(0) @map("sort_order") @db.SmallInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  contentReports ContentReport[]
+
+  @@map("report_reasons")
+}
+

@@ -1,0 +1,14 @@
+model UserProfile {
+  userId        String   @id @map("user_id") @db.Uuid
+  fullName      String   @map("full_name") @db.VarChar(100)
+  accountHandle String?  @map("account_handle") @db.VarChar(24)
+  avatarUrl     String?  @map("avatar_url") @db.Text
+  bio           String?  @db.VarChar(300)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+

@@ -1,0 +1,17 @@
+model UserAuthProvider {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  providerId     Int       @map("provider_id") @db.SmallInt
+  providerUserId String    @map("provider_user_id") @db.VarChar(255)
+  providerEmail  String?   @map("provider_email") @db.VarChar(255)
+  linkedAt       DateTime  @default(now()) @map("linked_at") @db.Timestamptz(6)
+  lastUsedAt     DateTime? @map("last_used_at") @db.Timestamptz(6)
+
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider AuthProvider @relation(fields: [providerId], references: [id])
+
+  @@unique([providerId, providerUserId], map: "uq_provider_identity")
+  @@unique([userId, providerId], map: "uq_user_provider")
+  @@map("user_auth_providers")
+}
+

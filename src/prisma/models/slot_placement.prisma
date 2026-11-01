@@ -1,0 +1,21 @@
+model SlotPlacement {
+  slotId      String   @map("slot_id") @db.Uuid
+  variantId   String   @map("variant_id") @db.Uuid
+  xPct        Decimal  @map("x_pct") @db.Decimal(5, 2)
+  yPct        Decimal  @map("y_pct") @db.Decimal(5, 2)
+  widthPct    Decimal  @map("width_pct") @db.Decimal(5, 2)
+  heightPct   Decimal  @map("height_pct") @db.Decimal(5, 2)
+  fontSizePct Decimal? @map("font_size_pct") @db.Decimal(5, 2)
+  textAlign   String   @default("center") @map("text_align") @db.VarChar(10)
+  startSec    Decimal? @map("start_sec") @db.Decimal(5, 2)
+  endSec      Decimal? @map("end_sec") @db.Decimal(5, 2)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  slot    Slot            @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  variant TemplateVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@id([slotId, variantId])
+  @@map("slot_placements")
+}
+

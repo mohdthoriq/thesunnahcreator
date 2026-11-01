@@ -1,0 +1,15 @@
+model RenderProvider {
+  id                Int      @id @default(autoincrement()) @db.SmallInt
+  code              String   @unique @db.VarChar(30)
+  name              String   @db.VarChar(50)
+  isActive          Boolean  @default(true) @map("is_active")
+  isDefault         Boolean  @default(false) @map("is_default")
+  costPerRenderIdr  Decimal? @map("cost_per_render_idr") @db.Decimal(12, 2)
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  renderJobs RenderJob[]
+
+  @@map("render_providers")
+}
+

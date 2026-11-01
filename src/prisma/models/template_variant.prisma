@@ -1,0 +1,22 @@
+model TemplateVariant {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId          String   @map("template_id") @db.Uuid
+  aspectRatioId       Int      @map("aspect_ratio_id") @db.SmallInt
+  backgroundKey       String   @map("background_key") @db.Text
+  thumbnailKey        String   @map("thumbnail_key") @db.Text
+  previewKey          String?  @map("preview_key") @db.Text
+  durationSec         Decimal  @map("duration_sec") @db.Decimal(5, 2)
+  providerTemplateRef String?  @map("provider_template_ref") @db.VarChar(100)
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  template       Template        @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  aspectRatio    AspectRatio     @relation(fields: [aspectRatioId], references: [id])
+  slotPlacements SlotPlacement[]
+  videos         Video[]
+
+  @@unique([templateId, aspectRatioId])
+  @@index([aspectRatioId, templateId], map: "idx_variants_ratio")
+  @@map("template_variants")
+}
+

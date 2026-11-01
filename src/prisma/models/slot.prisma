@@ -1,0 +1,27 @@
+model Slot {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId    String        @map("template_id") @db.Uuid
+  key           String        @db.VarChar(50)
+  label         String        @db.VarChar(100)
+  slotType      SlotType      @map("slot_type")
+  isRequired    Boolean       @default(false) @map("is_required")
+  isSource      Boolean       @default(false) @map("is_source")
+  maxChars      Int?          @map("max_chars") @db.SmallInt
+  textDirection TextDirection @default(ltr) @map("text_direction")
+  fontFamily    String?       @map("font_family") @db.VarChar(50)
+  textTransform String        @default("none") @map("text_transform") @db.VarChar(20)
+  autoShrink    Boolean       @default(false) @map("auto_shrink")
+  hideWhenEmpty Boolean       @default(false) @map("hide_when_empty")
+  colorRole     ColorRole?    @map("color_role")
+  placeholder   String?       @db.Text
+  sortOrder     Int           @default(0) @map("sort_order") @db.SmallInt
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  template       Template        @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  slotPlacements SlotPlacement[]
+
+  @@unique([templateId, key])
+  @@map("slots")
+}
+

@@ -1,0 +1,72 @@
+enum UserRole {
+  user
+  admin
+
+  @@map("user_role")
+}
+
+enum VerificationPurpose {
+  verify_email
+  reset_password
+
+  @@map("verification_purpose")
+}
+
+enum TemplateStatus {
+  draft
+  published
+  hidden
+
+  @@map("template_status")
+}
+
+enum SlotType {
+  text
+  color
+
+  @@map("slot_type")
+}
+
+enum TextDirection {
+  ltr
+  rtl
+
+  @@map("text_direction")
+}
+
+enum ColorRole {
+  background
+  text
+  accent
+
+  @@map("color_role")
+}
+
+enum VideoStatus {
+  draft
+  queued
+  processing
+  completed
+  failed
+
+  @@map("video_status")
+}
+
+enum RenderStatus {
+  queued
+  processing
+  error
+  completed
+  failed
+
+  @@map("render_status")
+}
+
+enum ReportStatus {
+  open
+  reviewed
+  closed
+
+  @@map("report_status")
+}
+

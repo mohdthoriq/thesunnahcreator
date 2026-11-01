@@ -1,0 +1,18 @@
+model AspectRatio {
+  id            Int      @id @default(autoincrement()) @db.SmallInt
+  code          String   @unique @db.VarChar(10)
+  name          String   @db.VarChar(50)
+  widthUnits    Int      @map("width_units") @db.SmallInt
+  heightUnits   Int      @map("height_units") @db.SmallInt
+  platformsNote String?  @map("platforms_note") @db.VarChar(100)
+  isActive      Boolean  @default(true) @map("is_active")
+  sortOrder     Int      @default(0) @map("sort_order") @db.SmallInt
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  templateVariants TemplateVariant[]
+
+  @@unique([widthUnits, heightUnits])
+  @@map("aspect_ratios")
+}
+

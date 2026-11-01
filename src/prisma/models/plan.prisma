@@ -1,0 +1,26 @@
+model Plan {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code               String   @unique @db.VarChar(50)
+  name               String   @db.VarChar(100)
+  description        String?  @db.Text
+  priceIdr           Decimal  @default(0) @map("price_idr") @db.Decimal(12, 2)
+  billingInterval    String   @default("monthly") @map("billing_interval") @db.VarChar(10)
+  renderQuotaMonthly Int?     @map("render_quota_monthly")
+  maxResolution      String   @default("720p") @map("max_resolution") @db.VarChar(10)
+  hasWatermark       Boolean  @default(true) @map("has_watermark")
+  allTemplatesAccess Boolean  @default(false) @map("all_templates_access")
+  brandKitEnabled    Boolean  @default(false) @map("brand_kit_enabled")
+  teamSeats          Int      @default(1) @map("team_seats") @db.SmallInt
+  features           Json     @default("{}") @db.JsonB
+  isDefault          Boolean  @default(false) @map("is_default")
+  isActive           Boolean  @default(true) @map("is_active")
+  sortOrder          Int      @default(0) @map("sort_order") @db.SmallInt
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  users        User[]
+  usagePeriods UsagePeriod[]
+
+  @@map("plans")
+}
+

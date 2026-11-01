@@ -1,0 +1,30 @@
+model RenderJob {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoId        String       @map("video_id") @db.Uuid
+  attempt        Int          @default(1) @db.SmallInt
+  retryOfId      String?      @unique @map("retry_of_id") @db.Uuid
+  status         RenderStatus @default(queued)
+  providerId     Int          @map("provider_id") @db.SmallInt
+  providerJobId  String?      @map("provider_job_id") @db.VarChar(100)
+  payload        Json         @db.JsonB
+  outputKey      String?      @map("output_key") @db.Text
+  costIdr        Decimal?     @map("cost_idr") @db.Decimal(12, 2)
+  queuedAt       DateTime     @default(now()) @map("queued_at") @db.Timestamptz(6)
+  startedAt      DateTime?    @map("started_at") @db.Timestamptz(6)
+  finishedAt     DateTime?    @map("finished_at") @db.Timestamptz(6)
+  errorMessage   String?      @map("error_message") @db.Text
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  video              Video          @relation("VideoRenderJobs", fields: [videoId], references: [id], onDelete: Cascade)
+  provider           RenderProvider @relation(fields: [providerId], references: [id])
+  retryOf            RenderJob?     @relation("RenderJobRetry", fields: [retryOfId], references: [id])
+  retryChild         RenderJob?     @relation("RenderJobRetry")
+  videoAsLastJob     Video?         @relation("VideoLastRenderJob")
+
+  @@index([videoId, attempt], map: "idx_render_jobs_video")
+  @@index([status, queuedAt], map: "idx_render_jobs_active")
+  @@unique([providerId, providerJobId], map: "idx_render_jobs_provider")
+  @@map("render_jobs")
+}
+

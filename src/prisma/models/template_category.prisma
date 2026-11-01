@@ -1,0 +1,16 @@
+model TemplateCategory {
+  id          Int      @id @default(autoincrement()) @db.SmallInt
+  slug        String   @unique @db.VarChar(50)
+  name        String   @db.VarChar(50)
+  description String?  @db.Text
+  icon        String?  @db.VarChar(50)
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order") @db.SmallInt
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  templates Template[]
+
+  @@map("template_categories")
+}
+
